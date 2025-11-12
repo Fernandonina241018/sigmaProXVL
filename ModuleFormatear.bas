@@ -85,7 +85,7 @@ Sub FormatearDato(celda As Range)
 
         ' Formato según tipo
         If IsDate(.Value) Then
-            .NumberFormat = "dd/mm/yyyy hh:mm:ss AM/PM"
+            .NumberFormat = "dd/mmm/yyyy hh:mm:ss AM/PM"
         ElseIf IsNumeric(.Value) Then
             .NumberFormat = "0.0000"
         Else
