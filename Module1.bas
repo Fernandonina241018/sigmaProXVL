@@ -1,13 +1,27 @@
 Option Explicit
 
 '=====================
-'  A) LÛgica central
+'  A) L√≥gica central
 '=====================
 
-' Devuelve una matriz (nCols x nStats) con los estadÌsticos por columna.
-' direcciÛn: por ejemplo "[Book1]Sheet1!$C$1:$F$5" (leÌda desde TextBox).
-' usarVarMuestral: True = VAR.S (muestral), False = VAR.P (poblacional).
-' Inicia an·lisis despuÈs del encabezado (fila + 1).
+'-------------------------------------------------------------------------------
+' Funci√≥n: CalcularEstadisticosPorColumna
+' Descripci√≥n:
+'   Calcula una serie de estad√≠sticos b√°sicos para cada columna de un rango
+'   especificado. Retorna una matriz con encabezado, conteo, mediana, media,
+'   varianza, desviaci√≥n est√°ndar, m√≠nimo y m√°ximo, por columna.
+'
+' Par√°metros:
+'   direccion          - Cadena que especifica el rango (por ejemplo, "[Libro1]Hoja1!$C$1:$F$5").
+'   usarVarMuestral    - Booleano opcional, True para usar varianza muestral (VAR.S),
+'                        False para varianza poblacional (VAR.P). Por defecto es True.
+'
+' Retorno:
+'   Una matriz Variant (nCols x nStats) con los resultados calculados por columna.
+'
+' Errores:
+'   Lanza error si el rango no puede resolverse o si no tiene al menos una fila de datos.
+'-------------------------------------------------------------------------------
 Public Function CalcularEstadisticosPorColumna( _
     ByVal direccion As String, _
     Optional ByVal usarVarMuestral As Boolean = True) As Variant
@@ -18,37 +32,37 @@ Public Function CalcularEstadisticosPorColumna( _
     Dim cntNums As Long
     Dim header As Variant
     
-    ' --- EstadÌsticos a calcular (ajusta aquÌ si quieres m·s/menos) ---
+    ' --- Estad√≠sticos a calcular ---
     ' Orden de columnas de salida:
-    ' [Encabezado, Conteo, Mediana, Media, Varianza, Desv.Est., MÌnimo, M·ximo]
+    ' [Encabezado, Conteo, Mediana, Media, Varianza, Desv.Est., M√≠nimo, M√°ximo]
     Const OUT_COLS As Long = 8
     Dim med As Variant, varx As Variant, avg As Variant, stdev As Variant
     Dim minv As Variant, maxv As Variant, cnt As Variant
     
-    ' Resolver el rango desde el texto
+    ' Obtener el rango desde el texto proporcionado
     Set rng = GetRangeFromAddress(direccion)
     If rng Is Nothing Then
-        Err.Raise vbObjectError + 513, , "No se pudo resolver el rango desde la direcciÛn proporcionada."
+        Err.Raise vbObjectError + 513, , "No se pudo resolver el rango desde la direcci√≥n proporcionada."
     End If
     
-    If rng.Rows.count < 2 Then
+    If rng.Rows.Count < 2 Then
         Err.Raise vbObjectError + 514, , "El rango debe tener al menos 2 filas (encabezado + datos)."
     End If
     
-    nCols = rng.Columns.count
-    nRows = rng.Rows.count
+    nCols = rng.Columns.Count
+    nRows = rng.Rows.Count
     
     Dim res() As Variant
     ReDim res(1 To nCols, 1 To OUT_COLS)
     
+    ' Recorrer columnas y calcular estad√≠sticos
     For i = 1 To nCols
-        ' Datos de la columna i (excluye encabezado)
+        ' Datos de la columna i (excluye el encabezado)
         Set datosCol = rng.Columns(i).Resize(nRows - 1, 1).Offset(1, 0)
-        
         header = rng.Cells(1, i).Value
         
-        ' Conteo de valores numÈricos
-        cntNums = Application.WorksheetFunction.count(datosCol)
+        ' Conteo de valores num√©ricos
+        cntNums = Application.WorksheetFunction.Count(datosCol)
         cnt = cntNums
         
         ' Mediana
@@ -58,7 +72,7 @@ Public Function CalcularEstadisticosPorColumna( _
             med = CVErr(xlErrNA)
         End If
         
-        ' Media
+        ' Media (promedio)
         If cntNums >= 1 Then
             avg = Application.WorksheetFunction.Average(datosCol)
         Else
@@ -72,7 +86,7 @@ Public Function CalcularEstadisticosPorColumna( _
                 varx = Application.WorksheetFunction.Var_S(datosCol)
                 If Err.Number <> 0 Then
                     Err.Clear
-                    varx = Application.WorksheetFunction.Var(datosCol) ' compatibilidad
+                    varx = Application.WorksheetFunction.Var(datosCol) ' Compatibilidad versiones antiguas
                 End If
                 On Error GoTo 0
             Else
@@ -83,19 +97,19 @@ Public Function CalcularEstadisticosPorColumna( _
             varx = Application.WorksheetFunction.Var_P(datosCol)
             If Err.Number <> 0 Then
                 Err.Clear
-                varx = Application.WorksheetFunction.VarP(datosCol) ' compatibilidad
+                varx = Application.WorksheetFunction.VarP(datosCol) ' Compatibilidad versiones antiguas
             End If
             On Error GoTo 0
         End If
         
-        ' DesviaciÛn est·ndar
+        ' Desviaci√≥n est√°ndar
         If usarVarMuestral Then
             If cntNums >= 2 Then
                 On Error Resume Next
                 stdev = Application.WorksheetFunction.StDev_S(datosCol)
                 If Err.Number <> 0 Then
                     Err.Clear
-                    stdev = Application.WorksheetFunction.stdev(datosCol) ' compatibilidad
+                    stdev = Application.WorksheetFunction.StDev(datosCol) ' Compatibilidad versiones antiguas
                 End If
                 On Error GoTo 0
             Else
@@ -106,12 +120,12 @@ Public Function CalcularEstadisticosPorColumna( _
             stdev = Application.WorksheetFunction.StDev_P(datosCol)
             If Err.Number <> 0 Then
                 Err.Clear
-                stdev = Application.WorksheetFunction.StDevP(datosCol) ' compatibilidad
+                stdev = Application.WorksheetFunction.StDevP(datosCol) ' Compatibilidad versiones antiguas
             End If
             On Error GoTo 0
         End If
         
-        ' MÌnimo y M·ximo
+        ' M√≠nimo y m√°ximo
         If cntNums >= 1 Then
             minv = Application.WorksheetFunction.Min(datosCol)
             maxv = Application.WorksheetFunction.Max(datosCol)
@@ -120,7 +134,7 @@ Public Function CalcularEstadisticosPorColumna( _
             maxv = CVErr(xlErrNA)
         End If
         
-        ' Cargar resultados en matriz
+        ' Almacenar resultados en la matriz
         res(i, 1) = CStr(header)
         res(i, 2) = cnt
         res(i, 3) = med
@@ -134,33 +148,44 @@ Public Function CalcularEstadisticosPorColumna( _
     CalcularEstadisticosPorColumna = res
 End Function
 
-
 '==========================
-'  B) Resolver direcciÛn
+'  B) Resolver direcci√≥n
 '==========================
 
-' Convierte "[Book1]Sheet1!$C$1:$F$5" o "Sheet1!A1:B10" a Range
+'-------------------------------------------------------------------------------
+' Funci√≥n: GetRangeFromAddress
+' Descripci√≥n:
+'   Convierte una direcci√≥n de rango en formato texto (puede incluir libro y hoja)
+'   en un objeto Range de Excel.
+'
+' Par√°metros:
+'   direccion - Texto con formato tipo "[Libro1]Hoja1!$C$1:$F$5" o "Hoja1!A1:B10"
+'
+' Retorno:
+'   Range v√°lido si la direcci√≥n puede ser procesada, Nothing en caso contrario.
+'-------------------------------------------------------------------------------
 Public Function GetRangeFromAddress(ByVal direccion As String) As Range
     Dim exclPos As Long
     Dim leftPart As String, addrPart As String
     Dim wbName As String, wsName As String
     Dim wb As Workbook, ws As Worksheet
+
     direccion = Trim(direccion)
     If Len(direccion) = 0 Then Exit Function
 
     exclPos = InStr(1, direccion, "!")
     If exclPos = 0 Then Exit Function
 
-    leftPart = Left(direccion, exclPos - 1)   ' [Book1]Sheet1  o  Sheet1
+    leftPart = Left(direccion, exclPos - 1)   ' [Libro1]Hoja1  o  Hoja1
     addrPart = Mid(direccion, exclPos + 1)    ' $C$1:$F$5
 
-    ' øIncluye nombre de libro entre corchetes?
+    ' ¬øIncluye nombre de libro entre corchetes?
     If InStr(1, leftPart, "[") > 0 And InStr(1, leftPart, "]") > 0 Then
         wbName = Mid(leftPart, InStr(1, leftPart, "[") + 1, _
                      InStr(1, leftPart, "]") - InStr(1, leftPart, "[") - 1)
         wsName = Mid(leftPart, InStr(1, leftPart, "]") + 1)
     Else
-        wbName = ""          ' asume libro activo
+        wbName = ""          ' Asume libro activo
         wsName = leftPart
     End If
     On Error GoTo salir
@@ -180,13 +205,24 @@ salir:
     Set GetRangeFromAddress = Nothing
 End Function
 
-
 '=========================================
 '  C) Crear NUEVA hoja y escribir resultados
 '=========================================
 
-' Crea una nueva hoja con nombre base "Estadisticas" (si existe, agrega sufijo).
-' Escribe los resultados comenzando en A1 de esa hoja.
+'-------------------------------------------------------------------------------
+' Subrutina: EscribirResultadosEnNuevaHoja
+' Descripci√≥n:
+'   Genera una nueva hoja en el libro de Excel con los resultados estad√≠sticos
+'   calculados por columna. Si existe una hoja con el nombre base, se le agrega un sufijo.
+'
+' Par√°metros:
+'   direccion         - Direcci√≥n del rango de datos.
+'   usarVarMuestral   - Booleano opcional para seleccionar tipo de varianza.
+'   nombreBaseHoja    - Nombre base para la hoja a crear. Por defecto "Estadisticas".
+'
+' Efectos:
+'   Crea hoja y vuelca los resultados y encabezados a partir de la celda A1.
+'-------------------------------------------------------------------------------
 Public Sub EscribirResultadosEnNuevaHoja( _
     ByVal direccion As String, _
     Optional ByVal usarVarMuestral As Boolean = True, _
@@ -197,37 +233,50 @@ Public Sub EscribirResultadosEnNuevaHoja( _
     Dim headers As Variant
     Dim nFilas As Long, nCols As Long
 
-    ' Calcular
+    ' Calcular estad√≠sticos
     res = CalcularEstadisticosPorColumna(direccion, usarVarMuestral)
     nFilas = UBound(res, 1)
     nCols = UBound(res, 2)
 
-    ' Encabezados (ajustar si agregas o quitas estadÌsticas)
+    ' Encabezados de columna
     headers = Array("Columna", "Conteo", "Mediana", "Media", _
                     IIf(usarVarMuestral, "Varianza (VAR.S)", "Varianza (VAR.P)"), _
                     IIf(usarVarMuestral, "Desv.Est. (STDEV.S)", "Desv.Est. (STDEV.P)"), _
-                    "MÌnimo", "M·ximo")
+                    "M√≠nimo", "M√°ximo")
 
     ' Crear hoja nueva con nombre disponible
     Set wsOut = CrearHojaConNombreDisponible(ThisWorkbook, nombreBaseHoja)
 
-    ' Volcar encabezados y datos
+    ' Volcar encabezados y resultados
     wsOut.Range("A1").Resize(1, nCols).Value = headers
     wsOut.Range("A2").Resize(nFilas, nCols).Value = res
-    ' Formato r·pido
+    ' Formato r√°pido: autofit y resaltado en primera fila
     With wsOut
         .Columns("A:" & Chr$(64 + nCols)).AutoFit
         .Rows(1).Font.Bold = True
-        .Rows(1).Interior.color = RGB(242, 242, 242)
+        .Rows(1).Interior.Color = RGB(242, 242, 242)
     End With
 
     wsOut.Activate
 End Sub
 
-
 '=========================================
 '  D) Utilidad: crear hoja con nombre disponible
 '=========================================
+
+'-------------------------------------------------------------------------------
+' Funci√≥n: CrearHojaConNombreDisponible
+' Descripci√≥n:
+'   A√±ade una hoja nueva con un nombre base, asegurando que no se repita en el libro.
+'   Si el nombre existe, agrega un sufijo entre par√©ntesis incrementando.
+'
+' Par√°metros:
+'   wb          - Workbook donde se crear√° la hoja.
+'   nombreBase  - Cadena base para el nombre de la hoja.
+'
+' Retorno:
+'   Worksheet - Referencia a la hoja creada.
+'-------------------------------------------------------------------------------
 Public Function CrearHojaConNombreDisponible( _
     ByVal wb As Workbook, _
     ByVal nombreBase As String) As Worksheet
@@ -239,6 +288,7 @@ Public Function CrearHojaConNombreDisponible( _
     nombrePropuesto = nombreBase
     idx = 1
 
+    ' Buscar un nombre disponible (agrega sufijos si necesario)
     Do
         existe = False
         Dim ws As Worksheet
@@ -257,7 +307,6 @@ Public Function CrearHojaConNombreDisponible( _
         End If
     Loop
 
-    Set CrearHojaConNombreDisponible = wb.Worksheets.Add(After:=wb.Worksheets(wb.Worksheets.count))
+    Set CrearHojaConNombreDisponible = wb.Worksheets.Add(After:=wb.Worksheets(wb.Worksheets.Count))
     CrearHojaConNombreDisponible.Name = nombrePropuesto
 End Function
-
