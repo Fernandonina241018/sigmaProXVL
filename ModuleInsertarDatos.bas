@@ -1,17 +1,17 @@
 '================================================================================
-' M”DULO: An·lisis EstadÌstico Profesional - Layout Optimizado
-' VERSI”N: 3.0 - DiseÒo Horizontal con SeparaciÛn de Gr·ficos
-' DESCRIPCI”N: Informe tipo revista con columnas izquierda protegidas (A-G)
+' M√ìDULO: An√°lisis Estad√≠stico Profesional - Layout Optimizado
+' VERSI√ìN: 3.0 - Dise√±o Horizontal con Separaci√≥n de Gr√°ficos
+' DESCRIPCI√ìN: Informe tipo revista con columnas izquierda protegidas (A-G)
 ' MEJORAS V3.0:
 '   - Resultados inician en columna H (protege columnas A-G)
-'   - Layout horizontal que evita superposiciÛn de gr·ficos
-'   - DiseÒo tipo revista profesional con secciones verticales
-'   - Gr·ficos posicionados estratÈgicamente debajo de cada columna
+'   - Layout horizontal que evita superposici√≥n de gr√°ficos
+'   - Dise√±o tipo revista profesional con secciones verticales
+'   - Gr√°ficos posicionados estrat√©gicamente debajo de cada columna
 '================================================================================
 ''================================================================================
 Public Sub MostrarAnalisisVerticalEnHoja()
     '----------------------------------------------------------------------------
-    ' SECCI”N 1: DECLARACI”N DE VARIABLES
+    ' SECCI√ìN 1: DECLARACI√ìN DE VARIABLES
     '----------------------------------------------------------------------------
     Dim wb As Workbook
     Dim rango As Range
@@ -30,8 +30,8 @@ Public Sub MostrarAnalisisVerticalEnHoja()
 
     ' DESACTIVAR durante procesamiento
     With Application
-        .ScreenUpdating = False        ' No actualizar pantalla (CRÕTICO)
-        .Calculation = xlCalculationManual  ' Desactivar c·lculos autom·ticos
+        .ScreenUpdating = False        ' No actualizar pantalla (CR√çTICO)
+        .Calculation = xlCalculationManual  ' Desactivar c√°lculos autom√°ticos
         .EnableEvents = False          ' Desactivar eventos
         .DisplayStatusBar = False      ' Ocultar barra de estado
     End With
@@ -39,7 +39,7 @@ Public Sub MostrarAnalisisVerticalEnHoja()
     On Error GoTo Cleanup
 
     '----------------------------------------------------------------------------
-    ' SECCI”N 2: CONFIGURACI”N INICIAL Y VALIDACIONES
+    ' SECCI√ìN 2: CONFIGURACI√ìN INICIAL Y VALIDACIONES
     '----------------------------------------------------------------------------
     ' Referenciar libro activo
     Set wb = ActiveWorkbook
@@ -49,16 +49,16 @@ Public Sub MostrarAnalisisVerticalEnHoja()
     Set rango = Range(sigmaproxvl.txtRango.Text)
     On Error GoTo 0
 
-    ' VALIDACI”N 1: Rango v·lido
+    ' VALIDACI√ìN 1: Rango v√°lido
     If rango Is Nothing Then
-        Debug.Print "Rango inv·lido. Por favor seleccione un rango v·lido.", vbExclamation
+        Debug.Print "Rango inv√°lido. Por favor seleccione un rango v√°lido.", vbExclamation
         Exit Sub
     End If
 
     ' Determinar workbook correcto (maneja rangos entre workbooks)
     Set wb = rango.Parent.Parent
 
-    ' VALIDACI”N 2: N˙mero de columnas
+    ' VALIDACI√ìN 2: N√∫mero de columnas
     numColumnas = rango.Columns.count
     If numColumnas = 0 Then
         Debug.Print "No se encontraron columnas en el rango seleccionado.", vbExclamation
@@ -66,7 +66,7 @@ Public Sub MostrarAnalisisVerticalEnHoja()
     End If
 
     '----------------------------------------------------------------------------
-    ' SECCI”N 3: AN¡LISIS ESTADÕSTICO POR COLUMNA
+    ' SECCI√ìN 3: AN√ÅLISIS ESTAD√çSTICO POR COLUMNA
     '----------------------------------------------------------------------------
     ReDim stats(1 To numColumnas)
     For col = 1 To numColumnas
@@ -74,11 +74,11 @@ Public Sub MostrarAnalisisVerticalEnHoja()
     Next col
 
     '----------------------------------------------------------------------------
-    ' SECCI”N 4: CREACI”N Y CONFIGURACI”N DE HOJA DE RESULTADOS
+    ' SECCI√ìN 4: CREACI√ìN Y CONFIGURACI√ìN DE HOJA DE RESULTADOS
     '----------------------------------------------------------------------------
-    ' Generar nombre ˙nico para hoja de resultados
-    numeroHoja = ObtenerProximoNumeroHoja(wb, "An·lisis EstadÌstico")
-    nombreHoja = "An·lisis EstadÌstico " & numeroHoja
+    ' Generar nombre √∫nico para hoja de resultados
+    numeroHoja = ObtenerProximoNumeroHoja(wb, "An√°lisis Estad√≠stico")
+    nombreHoja = "An√°lisis Estad√≠stico " & numeroHoja
 
     ' Crear nueva hoja al final del workbook
     Set ws = wb.Sheets.Add(After:=wb.Sheets(wb.Sheets.count))
@@ -87,7 +87,7 @@ Public Sub MostrarAnalisisVerticalEnHoja()
     Dim minimoGlobal As Double
     Dim maximoGlobal As Double
 
-    ' Inicializar con valores del primer columna v·lida
+    ' Inicializar con valores del primer columna v√°lida
     Dim primeraColumnaValida As Integer
     For col = 1 To numColumnas
         If stats(col).count > 0 Then
@@ -98,7 +98,7 @@ Public Sub MostrarAnalisisVerticalEnHoja()
         End If
     Next col
 
-    ' Buscar mÌnimo y m·ximo globales
+    ' Buscar m√≠nimo y m√°ximo globales
     For col = primeraColumnaValida + 1 To numColumnas
         If stats(col).count > 0 Then
             If stats(col).minimo < minimoGlobal Then minimoGlobal = stats(col).minimo
@@ -106,72 +106,11 @@ Public Sub MostrarAnalisisVerticalEnHoja()
         End If
     Next col
     '----------------------------------------------------------------------------
-    ' SECCI”N 5: FORMATO DE REPORTE - ENCABEZADO
+    ' SECCI√ìN 5: FORMATO DE REPORTE - ENCABEZADO
     '----------------------------------------------------------------------------
     With ws
-'        ' ENCABEZADO PRINCIPAL
-'        Call FormatearEncabezadoPrincipal(ws.Range("A1:E1"))
-'        .Range("A1").Value = "AN¡LISIS ESTADÕSTICO - COMPLETADO (#" & numeroHoja & ")" & " [ " & ws.Name & " ] "
-'
-'        ' INFORMACI”N METADATA DEL AN¡LISIS
-'        Call FormatearEncabezadoSeccion(ws.Range("A2"))
-'        .Range("A2").Value = "Fecha del an·lisis:"
-'        Call FormatearCeldaDatos(ws.Range("B2:E2"))
-'        .Range("B2").Value = Format(Now, "Long Date") & " " & Format(Now, "hh:mm AM/PM")
-'
-'        Call FormatearEncabezadoSeccion(ws.Range("A3"))
-'        .Range("A3").Value = "Rango analizado:"
-'        Call FormatearCeldaDatos(ws.Range("B3:E3"))
-'        .Range("B3").Value = rango.Address
-'
-'         Call FormatearEncabezadoSeccion(ws.Range("A4"))
-'        .Range("A4").Value = "N˙mero de an·lisis:"
-'        Call FormatearCeldaDatos(ws.Range("B4:E4"))
-'        .Range("B4").Value = numeroHoja
-'
-'         Call FormatearEncabezadoSeccion(ws.Range("A5"))
-'        .Range("A5").Value = "Total de Columnas Analizadas:"
-'        Call FormatearCeldaDatos(ws.Range("B5:E5"))
-'        .Range("B5").Value = numColumnas
-'
-'         Call FormatearEncabezadoSeccion(ws.Range("A6"))
-'        .Range("A6").Value = "M·ximo Global:"
-'        Call FormatearCeldaDatos(ws.Range("B6:E6"))
-'        .Range("B6").Value = maximoGlobal
-'
-'         Call FormatearEncabezadoSeccion(ws.Range("A7"))
-'        .Range("A7").Value = "MÌnimo Global:"
-'        Call FormatearCeldaDatos(ws.Range("B7:E7"))
-'        .Range("B7").Value = minimoGlobal
-'
-'         Call FormatearEncabezadoSeccion(ws.Range("A8"))
-'        .Range("A8").Value = "Total de Datos Procesados:"
-'        Call FormatearCeldaDatos(ws.Range("B8:E8"))
-'        totalDatos = 0
-'        For col = 1 To numColumnas
-'            totalDatos = totalDatos + stats(col).count
-'        Next col
-'        .Range("B8").Value = totalDatos
-'
-'         Call FormatearEncabezadoSeccion(ws.Range("A9"))
-'        .Range("A9").Value = "Outliers Detectados:"
-'        Call FormatearCeldaDatos(ws.Range("B9:E9"))
-'        totalOutliers = 0
-'        For col = 1 To numColumnas
-'            totalOutliers = totalOutliers + stats(col).NumOutliers
-'        Next col
-'        .Range("B9").Value = totalOutliers & " de " & totalDatos & " (" & Format(totalOutliers / totalDatos * 100, "0.00") & "%)"
-'
-'         Call FormatearEncabezadoSeccion(ws.Range("A10"))
-'        .Range("A10").Value = "Cumplimiento de los Datos:"
-'        Call FormatearCeldaDatos(ws.Range("B10:E10"))
-'        If totalOutliers = 0 Then
-'            .Range("B10").Value = "Datos Normalizados"
-'        Else
-'            .Range("B10").Value = "Datos No Normalizados"
-'        End If
         '-----------------------------------------------------------------------
-        ' CONFIGURACI”N DE P¡GINA PARA IMPRESI”N
+        ' CONFIGURACI√ìN DE P√ÅGINA PARA IMPRESI√ìN
         '-----------------------------------------------------------------------
         With .PageSetup
             .Orientation = xlPortrait
@@ -203,10 +142,10 @@ Public Sub MostrarAnalisisVerticalEnHoja()
         End With
         .Rows(1).RowHeight = 25
         
-        ' SubtÌtulo del documento
+        ' Subt√≠tulo del documento
         .Range("A2:E2").Merge
         With .Range("A2")
-            .Value = "REPORTE DE AN¡LISIS ESTADÕSTICO"
+            .Value = "REPORTE DE AN√ÅLISIS ESTAD√çSTICO"
             .Font.Name = "Segoe UI"
             .Font.Size = 12
             .Font.Bold = True
@@ -215,7 +154,7 @@ Public Sub MostrarAnalisisVerticalEnHoja()
         End With
         .Rows(2).RowHeight = 20
         
-        ' LÌnea separadora decorativa
+        ' L√≠nea separadora decorativa
         With .Range("A3:E3")
             .Merge
             .Borders(xlEdgeBottom).LineStyle = xlDouble
@@ -225,15 +164,15 @@ Public Sub MostrarAnalisisVerticalEnHoja()
         .Rows(3).RowHeight = 5
         
         '-----------------------------------------------------------------------
-        ' BLOQUE 1: IDENTIFICACI”N DEL DOCUMENTO (Filas 4-5)
+        ' BLOQUE 1: IDENTIFICACI√ìN DEL DOCUMENTO (Filas 4-5)
         '-----------------------------------------------------------------------
         .Rows(4).RowHeight = 8  ' Espacio en blanco
         
-        Call FormatearSeccionTitulo(.Range("A5:E5"), "IDENTIFICACI”N DEL AN¡LISIS")
+        Call FormatearSeccionTitulo(.Range("A5:E5"), "IDENTIFICACI√ìN DEL AN√ÅLISIS")
         
-        ' N˙mero de an·lisis
+        ' N√∫mero de an√°lisis
         Call FormatearEtiqueta(.Range("A6:B6"))
-        .Range("A6").Value = "N˙mero de An·lisis:"
+        .Range("A6").Value = "N√∫mero de An√°lisis:"
         Call FormatearDato(.Range("C6:E6"))
         .Range("C6").Value = "# " & Format(numeroHoja, "0000")
         .Range("C6").VerticalAlignment = xlCenter
@@ -244,7 +183,7 @@ Public Sub MostrarAnalisisVerticalEnHoja()
         Call FormatearDato(.Range("C7:E7"))
         .Range("C7").Value = ws.Name
         
-        ' Fecha y hora del an·lisis
+        ' Fecha y hora del an√°lisis
         Call FormatearEtiqueta(.Range("A8:B8"))
         .Range("A8").Value = "Fecha y Hora:"
         Call FormatearDato(.Range("C8:E8"))
@@ -253,11 +192,11 @@ Public Sub MostrarAnalisisVerticalEnHoja()
         .Rows(8).RowHeight = 30
         
         '-----------------------------------------------------------------------
-        ' BLOQUE 2: INFORMACI”N DEL DATASET (Filas 9-12)
+        ' BLOQUE 2: INFORMACI√ìN DEL DATASET (Filas 9-12)
         '-----------------------------------------------------------------------
         .Rows(9).RowHeight = 8  ' Espacio en blanco
         
-        Call FormatearSeccionTitulo(.Range("A10:E10"), "INFORMACI”N DEL CONJUNTO DE DATOS")
+        Call FormatearSeccionTitulo(.Range("A10:E10"), "INFORMACI√ìN DEL CONJUNTO DE DATOS")
         
         ' Rango analizado
         Call FormatearEtiqueta(.Range("A11:B11"))
@@ -282,22 +221,22 @@ Public Sub MostrarAnalisisVerticalEnHoja()
         .Range("C13").Value = Format(totalDatos, "#,##0") & " registro(s)"
         
         '-----------------------------------------------------------------------
-        ' BLOQUE 3: ESTADÕSTICAS GENERALES (Filas 14-17)
+        ' BLOQUE 3: ESTAD√çSTICAS GENERALES (Filas 14-17)
         '-----------------------------------------------------------------------
         .Rows(14).RowHeight = 8  ' Espacio en blanco
         
-        Call FormatearSeccionTitulo(.Range("A15:E15"), "ESTADÕSTICAS GENERALES")
+        Call FormatearSeccionTitulo(.Range("A15:E15"), "ESTAD√çSTICAS GENERALES")
         
-        ' M·ximo Global
+        ' M√°ximo Global
         Call FormatearEtiqueta(.Range("A16:B16"))
-        .Range("A16").Value = "Valor M·ximo Global:"
+        .Range("A16").Value = "Valor M√°ximo Global:"
         Call FormatearDato(.Range("C16:E16"))
         .Range("C16").Value = Format(maximoGlobal, "#,##0.00")
         .Range("C16").Font.Bold = True
         
-        ' MÌnimo Global
+        ' M√≠nimo Global
         Call FormatearEtiqueta(.Range("A17:B17"))
-        .Range("A17").Value = "Valor MÌnimo Global:"
+        .Range("A17").Value = "Valor M√≠nimo Global:"
         Call FormatearDato(.Range("C17:E17"))
         .Range("C17").Value = Format(minimoGlobal, "#,##0.00")
         .Range("C17").Font.Bold = True
@@ -309,11 +248,11 @@ Public Sub MostrarAnalisisVerticalEnHoja()
         .Range("C18").Value = Format(maximoGlobal - minimoGlobal, "#,##0.00")
         
         '-----------------------------------------------------------------------
-        ' BLOQUE 4: DETECCI”N DE ANOMALÕAS (Filas 19-22)
+        ' BLOQUE 4: DETECCI√ìN DE ANOMAL√çAS (Filas 19-22)
         '-----------------------------------------------------------------------
         .Rows(19).RowHeight = 8  ' Espacio en blanco
         
-        Call FormatearSeccionTitulo(.Range("A20:E20"), "DETECCI”N DE ANOMALÕAS (OUTLIERS)")
+        Call FormatearSeccionTitulo(.Range("A20:E20"), "DETECCI√ìN DE ANOMAL√çAS (OUTLIERS)")
         
         ' Calcular total de outliers
         totalOutliers = 0
@@ -333,7 +272,7 @@ Public Sub MostrarAnalisisVerticalEnHoja()
         
         ' Porcentaje de outliers
         Call FormatearEtiqueta(.Range("A22:B22"))
-        .Range("A22").Value = "Porcentaje de AnomalÌas:"
+        .Range("A22").Value = "Porcentaje de Anomal√≠as:"
         Call FormatearDato(.Range("C22:E22"))
         If totalDatos > 0 Then
             porcentajeOutliers = (totalOutliers / totalDatos) * 100
@@ -347,15 +286,15 @@ Public Sub MostrarAnalisisVerticalEnHoja()
         End If
         
         '-----------------------------------------------------------------------
-        ' BLOQUE 5: EVALUACI”N Y CONCLUSIONES (Filas 23-26)
+        ' BLOQUE 5: EVALUACI√ìN Y CONCLUSIONES (Filas 23-26)
         '-----------------------------------------------------------------------
         .Rows(23).RowHeight = 8  ' Espacio en blanco
         
-        Call FormatearSeccionTitulo(.Range("A24:E24"), "EVALUACI”N DE CALIDAD DE DATOS")
+        Call FormatearSeccionTitulo(.Range("A24:E24"), "EVALUACI√ìN DE CALIDAD DE DATOS")
         
-        ' Estado de normalizaciÛn
+        ' Estado de normalizaci√≥n
         Call FormatearEtiqueta(.Range("A25:B25"))
-        .Range("A25").Value = "Estado de NormalizaciÛn:"
+        .Range("A25").Value = "Estado de Normalizaci√≥n:"
         Call FormatearDato(.Range("C25:E25"))
         If totalOutliers = 0 Then
             .Range("C25").Value = "? DATOS NORMALIZADOS"
@@ -369,22 +308,22 @@ Public Sub MostrarAnalisisVerticalEnHoja()
             .Range("C25").Interior.color = RGB(255, 199, 206)  ' Fondo rojo claro
         End If
         
-        ' RecomendaciÛn
+        ' Recomendaci√≥n
         Call FormatearEtiqueta(.Range("A26:B26"))
-        .Range("A26").Value = "RecomendaciÛn:"
+        .Range("A26").Value = "Recomendaci√≥n:"
         Call FormatearDato(.Range("C26:E26"))
         If totalOutliers = 0 Then
-            .Range("C26").Value = "Los datos cumplen con los est·ndares de calidad." & _
-                                vbLf & "No se requiere acciÛn correctiva."
+            .Range("C26").Value = "Los datos cumplen con los est√°ndares de calidad." & _
+                                vbLf & "No se requiere acci√≥n correctiva."
         Else
             .Range("C26").Value = "Se recomienda revisar los " & totalOutliers & _
                                 " registro(s) identificados como outliers." & _
-                                vbLf & "Evaluar si son errores o valores legÌtimos."
+                                vbLf & "Evaluar si son errores o valores leg√≠timos."
         End If
         .Rows(26).RowHeight = 30
         
         '-----------------------------------------------------------------------
-        ' PIE DE P¡GINA DEL REPORTE (Fila 27)
+        ' PIE DE P√ÅGINA DEL REPORTE (Fila 27)
         '-----------------------------------------------------------------------
         .Rows(27).RowHeight = 8  ' Espacio en blanco
         
@@ -393,7 +332,7 @@ Public Sub MostrarAnalisisVerticalEnHoja()
             .Borders(xlEdgeTop).LineStyle = xlContinuous
             .Borders(xlEdgeTop).Weight = xlMedium
             .Borders(xlEdgeTop).ColorIndex = 1
-            .Value = "Fin del Encabezado del Reporte - Datos Detallados a ContinuaciÛn"
+            .Value = "Fin del Encabezado del Reporte - Datos Detallados a Continuaci√≥n"
             .Font.Name = "Arial"
             .Font.Size = 8
             .Font.Italic = True
@@ -406,23 +345,23 @@ Public Sub MostrarAnalisisVerticalEnHoja()
         .Rows(29).RowHeight = 12  ' Espacio final antes de datos
         
         '-----------------------------------------------------------------------
-        ' AJUSTES FINALES DE FORMATO PARA IMPRESI”N
+        ' AJUSTES FINALES DE FORMATO PARA IMPRESI√ìN
         '-----------------------------------------------------------------------
-        ' Configurar ancho de columnas (respetando diseÒo A:E)
+        ' Configurar ancho de columnas (respetando dise√±o A:E)
         .Columns("A:B").ColumnWidth = 20
         .Columns("C:E").ColumnWidth = 25
         
-        ' Establecer ·rea de impresiÛn solo para el encabezado
+        ' Establecer √°rea de impresi√≥n solo para el encabezado
         .PageSetup.PrintArea = "$A$1:$E$28"
         
-        ' Configurar encabezado y pie de p·gina de impresiÛn
+        ' Configurar encabezado y pie de p√°gina de impresi√≥n
         With .PageSetup
             .LeftHeader = ""
             .CenterHeader = "&""Arial,Bold""&12" & ws.Name
             .RightHeader = ""
             .LeftFooter = "&""Arial""&8Generado: " & Format(Now, "dd/mm/yyyy hh:mm")
             .CenterFooter = ""
-            .RightFooter = "&""Arial""&8P·gina &P de &N"
+            .RightFooter = "&""Arial""&8P√°gina &P de &N"
         End With
         
         ' Borde exterior completo para el reporte
@@ -430,17 +369,17 @@ Public Sub MostrarAnalisisVerticalEnHoja()
             .BorderAround LineStyle:=xlContinuous, Weight:=xlMedium, ColorIndex:=1
         End With
         '----------------------------------------------------------------------------
-        ' SECCI”N 6: PRESENTACI”N DE RESULTADOS POR COLUMNA
+        ' SECCI√ìN 6: PRESENTACI√ìN DE RESULTADOS POR COLUMNA
         '----------------------------------------------------------------------------
         colResultados = 7 ' Columna inicial para resultados (C)
 
         For col = 1 To numColumnas
             '------------------------------------------------------------------------
-            ' SUBSECCI”N 6.1: ENCABEZADO DE COLUMNA
+            ' SUBSECCI√ìN 6.1: ENCABEZADO DE COLUMNA
             '------------------------------------------------------------------------
             fila = 1 ' Fila inicial para cada columna
 
-            ' TÌtulo con informaciÛn de lÌmites del formulario
+            ' T√≠tulo con informaci√≥n de l√≠mites del formulario
             .Cells(fila, colResultados).Value = stats(col).NombreColumna & " ( Rango " & stats(col).columna & ")"
             Range(.Cells(fila, colResultados), .Cells(fila, colResultados + 3)).Merge
             Call FormatearEncabezado(.Cells(fila, colResultados))
@@ -448,13 +387,13 @@ Public Sub MostrarAnalisisVerticalEnHoja()
 
 
             '------------------------------------------------------------------------
-            ' SUBSECCI”N 6.2: ESTADÕSTICOS B¡SICOS
+            ' SUBSECCI√ìN 6.2: ESTAD√çSTICOS B√ÅSICOS
             '------------------------------------------------------------------------
             If stats(col).count > 0 Then
                 Dim rngDatos As Range
 
 
-                 ' LÌmites en UserForm
+                 ' L√≠mites en UserForm
                 fila = fila + 1
                 .Cells(fila, colResultados).Value = "Estadisticos: "
                 .Cells(fila, colResultados + 1).Value = "Datos [Resultados]"
@@ -462,9 +401,9 @@ Public Sub MostrarAnalisisVerticalEnHoja()
                 Call FormatearEncabezado(.Cells(fila, colResultados))
                 Call FormatearEncabezado(.Cells(fila, colResultados + 1))
 
-                ' LÌmites en UserForm
+                ' L√≠mites en UserForm
                 fila = fila + 1
-                .Cells(fila, colResultados).Value = "LÌmites: "
+                .Cells(fila, colResultados).Value = "L√≠mites: "
                 .Cells(fila, colResultados + 1).Value = sigmaproxvl.cboLimiteSuperior & " - " & sigmaproxvl.cboLimiteInferior
                 .Range(.Cells(fila, colResultados + 1), .Cells(fila, colResultados + 3)).Merge
                 Call FormatearEncabezado(.Cells(fila, colResultados))
@@ -486,15 +425,15 @@ Public Sub MostrarAnalisisVerticalEnHoja()
                 Call FormatearEncabezado(.Cells(fila, colResultados))
                 Call FormatearDato(.Cells(fila, colResultados + 1))
 
-                ' DesviaciÛn Est·ndar con coloraciÛn condicional
+                ' Desviaci√≥n Est√°ndar con coloraci√≥n condicional
                 fila = fila + 1
-                .Cells(fila, colResultados).Value = "Desv. Est·ndar:"
+                .Cells(fila, colResultados).Value = "Desv. Est√°ndar:"
                 .Cells(fila, colResultados + 1).Value = stats(col).desviacionEstandar
                 .Range(.Cells(fila, colResultados + 1), .Cells(fila, colResultados + 3)).Merge
                 Call FormatearEncabezado(.Cells(fila, colResultados))
                 Call FormatearDato(.Cells(fila, colResultados + 1))
 
-                ' COLORACI”N: Rojo si > 4, Verde si <= 4
+                ' COLORACI√ìN: Rojo si > 4, Verde si <= 4
                 If stats(col).desviacionEstandar > exp Then
                     .Cells(fila, colResultados + 1).Interior.color = RGB(255, 0, 0)
                 Else
@@ -524,9 +463,9 @@ Public Sub MostrarAnalisisVerticalEnHoja()
                 Call FormatearDato(.Cells(fila, colResultados + 1))
                 .Cells(fila, colResultados + 1).Value = (stats(col).desviacionEstandar / Abs(stats(col).promedio)) * 100
 
-                ' M·ximo con coloraciÛn condicional
+                ' M√°ximo con coloraci√≥n condicional
                 fila = fila + 1
-                .Cells(fila, colResultados).Value = "M·ximo:"
+                .Cells(fila, colResultados).Value = "M√°ximo:"
                 .Cells(fila, colResultados + 1).Value = stats(col).maximo
                 .Range(.Cells(fila, colResultados + 1), .Cells(fila, colResultados + 3)).Merge
                 Call FormatearEncabezado(.Cells(fila, colResultados))
@@ -537,9 +476,9 @@ Public Sub MostrarAnalisisVerticalEnHoja()
                     .Cells(fila, colResultados + 1).Interior.color = RGB(0, 255, 0)
                 End If
 
-                ' MÌnimo con coloraciÛn condicional
+                ' M√≠nimo con coloraci√≥n condicional
                 fila = fila + 1
-                .Cells(fila, colResultados).Value = "MÌnimo:"
+                .Cells(fila, colResultados).Value = "M√≠nimo:"
                 .Cells(fila, colResultados + 1).Value = stats(col).minimo
                 .Range(.Cells(fila, colResultados + 1), .Cells(fila, colResultados + 3)).Merge
                 Call FormatearEncabezado(.Cells(fila, colResultados))
@@ -567,9 +506,9 @@ Public Sub MostrarAnalisisVerticalEnHoja()
                 Call FormatearDato(.Cells(fila, colResultados + 1))
 
                 '------------------------------------------------------------------------
-                ' SUBSECCI”N 6.5: C¡LCULOS ESPECIALES - VALIDACI”N FARMAC…UTICA
+                ' SUBSECCI√ìN 6.5: C√ÅLCULOS ESPECIALES - VALIDACI√ìN FARMAC√âUTICA
                 '------------------------------------------------------------------------
-                ' C·lculo de Expectativa Matem·tica
+                ' C√°lculo de Expectativa Matem√°tica
                 Dim expmath As Double
                 On Error Resume Next
                 expmath = CDbl(sigmaproxvl.cboExpectativa.Value)
@@ -582,7 +521,7 @@ Public Sub MostrarAnalisisVerticalEnHoja()
                     Call FormatearEncabezado(.Cells(fila, colResultados))
                     Call FormatearDato(.Cells(fila, colResultados + 1))
 
-                    ' C·lculo de porcentaje de cumplimiento
+                    ' C√°lculo de porcentaje de cumplimiento
                     If expmath <= stats(col).promedio Then
                         .Cells(fila, colResultados + 1).Value = _
                             ((expmath / Abs(stats(col).promedio)) * 100) & "%"
@@ -591,7 +530,7 @@ Public Sub MostrarAnalisisVerticalEnHoja()
                             (Abs((stats(col).promedio) / expmath) * 100) & "%"
                     End If
 
-                    ' ColoraciÛn: Rojo si < 95%, Verde si >= 95%
+                    ' Coloraci√≥n: Rojo si < 95%, Verde si >= 95%
                     If expmath < 0.95 Then
                         .Cells(fila, colResultados + 1).Interior.color = RGB(255, 0, 0)
                     Else
@@ -606,19 +545,19 @@ Public Sub MostrarAnalisisVerticalEnHoja()
                     .Cells(fila, colResultados + 1).Value = "No Aplica"
                 End If
 
-                ' AsimetrÌa
+                ' Asimetr√≠a
                 fila = fila + 1
                 .Range(.Cells(fila, colResultados + 1), .Cells(fila, colResultados + 3)).Merge
                 Call FormatearEncabezado(.Cells(fila, colResultados))
                 Call FormatearDato(.Cells(fila, colResultados + 1))
                 If stats(col).asimetria < 0 Then
-                    .Cells(fila, colResultados).Value = "AsimetrÌa (Skewness) --> Izquierda"
+                    .Cells(fila, colResultados).Value = "Asimetr√≠a (Skewness) --> Izquierda"
                     .Cells(fila, colResultados + 1).Value = stats(col).asimetria
                 ElseIf stats(col).asimetria = 0 Then
-                    .Cells(fila, colResultados).Value = "AsimetrÌa (Skewness) --> Centro"
+                    .Cells(fila, colResultados).Value = "Asimetr√≠a (Skewness) --> Centro"
                     .Cells(fila, colResultados + 1).Value = stats(col).asimetria
                 Else:
-                    .Cells(fila, colResultados).Value = "AsimetrÌa (Skewness) --> Derecha"
+                    .Cells(fila, colResultados).Value = "Asimetr√≠a (Skewness) --> Derecha"
                     .Cells(fila, colResultados + 1).Value = stats(col).asimetria
                 End If
 
@@ -628,19 +567,19 @@ Public Sub MostrarAnalisisVerticalEnHoja()
                 Call FormatearEncabezado(.Cells(fila, colResultados))
                 Call FormatearDato(.Cells(fila, colResultados + 1))
                 If stats(col).asimetria < 0 Then
-                    .Cells(fila, colResultados).Value = "Curtosis (Kurtosis) --> Platic˙rtica (Pico Plano)"
+                    .Cells(fila, colResultados).Value = "Curtosis (Kurtosis) --> Platic√∫rtica (Pico Plano)"
                     .Cells(fila, colResultados + 1).Value = stats(col).curtosis
                 ElseIf stats(col).asimetria = 0 Then
-                    .Cells(fila, colResultados).Value = "Curtosis (Kurtosis) --> DistribuciÛn Norma"
+                    .Cells(fila, colResultados).Value = "Curtosis (Kurtosis) --> Distribuci√≥n Norma"
                     .Cells(fila, colResultados + 1).Value = stats(col).curtosis
                 Else:
-                    .Cells(fila, colResultados).Value = "Curtosis (Kurtosis) --> Leptoc˙rtica (Pico Agudo)"
+                    .Cells(fila, colResultados).Value = "Curtosis (Kurtosis) --> Leptoc√∫rtica (Pico Agudo)"
                     .Cells(fila, colResultados + 1).Value = stats(col).curtosis
                 End If
 
                 '------------------------------------------------------------------------
-                ' SUBSECCI”N 6.6: C¡LCULO DE F0 (STERILIZATION VALUE)
-                ' PROP”SITO: ValidaciÛn de procesos de esterilizaciÛn
+                ' SUBSECCI√ìN 6.6: C√ÅLCULO DE F0 (STERILIZATION VALUE)
+                ' PROP√ìSITO: Validaci√≥n de procesos de esterilizaci√≥n
                 ' REFERENCIA: USP <1229.5> - Sterilization Validation
                 '------------------------------------------------------------------------
 
@@ -649,12 +588,12 @@ Public Sub MostrarAnalisisVerticalEnHoja()
                 Dim f0 As Double
                 Dim z As Integer, t0 As Integer
 
-                ' Par·metros est·ndar para c·lculo F0
-                std = 121   ' Temperatura de referencia (∞C)
-                z = 10      ' Valor z (∞C)
+                ' Par√°metros est√°ndar para c√°lculo F0
+                std = 121   ' Temperatura de referencia (¬∞C)
+                z = 10      ' Valor z (¬∞C)
                 t0 = 10     ' Tiempo de referencia (minutos)
 
-                ' F”RMULA F0: ?10^((T-121)/z) dt
+                ' F√ìRMULA F0: ?10^((T-121)/z) dt
                 On Error Resume Next
 
                 fn = t0 ^ ((stats(col).promedio - std) / z)
@@ -666,10 +605,10 @@ Public Sub MostrarAnalisisVerticalEnHoja()
 
                 f0 = Abs(f0_raw) ' Valor absoluto para F0
 
-                ' PresentaciÛn de resultado F0
+                ' Presentaci√≥n de resultado F0
                 fila = fila + 1
                 .Cells(fila, colResultados).Value = "[ F0: ] ---> "
-                If sigmaproxvl.cboModoAnalisis.Value = "EsterilizaciÛn" Then
+                If sigmaproxvl.cboModoAnalisis.Value = "Esterilizaci√≥n" Then
                     .Cells(fila, colResultados + 1).Value = " [ " & fn & " / " & f0 & " ] "
                 Else
                     .Cells(fila, colResultados + 1).Value = "No Aplica"
@@ -678,7 +617,7 @@ Public Sub MostrarAnalisisVerticalEnHoja()
                 Call FormatearEncabezado(.Cells(fila, colResultados))
                 Call FormatearDato(.Cells(fila, colResultados + 1))
 
-                ' ColoraciÛn: Rojo si F0 < 15, Verde si F0 >= 15
+                ' Coloraci√≥n: Rojo si F0 < 15, Verde si F0 >= 15
                 If f0 < 15 Then
                     .Cells(fila, colResultados + 1).Interior.color = RGB(255, 0, 0)
                 Else
@@ -687,19 +626,19 @@ Public Sub MostrarAnalisisVerticalEnHoja()
 
             Else
                 '------------------------------------------------------------------------
-                ' SUBSECCI”N 6.7: CASO SIN DATOS V¡LIDOS
+                ' SUBSECCI√ìN 6.7: CASO SIN DATOS V√ÅLIDOS
                 '------------------------------------------------------------------------
                 fila = fila + 1
-                .Cells(fila, colResultados).Value = "Sin datos numÈricos"
+                .Cells(fila, colResultados).Value = "Sin datos num√©ricos"
                 .Range(.Cells(fila, colResultados), .Cells(fila, colResultados + 1)).Merge
                 fila = fila + 5 ' Espacio adicional para mantener formato
             End If
 
                 '------------------------------------------------------------------------
-                ' SUBSECCI”N 6.3: DETECCI”N Y REPORTE DE OUTLIERS
+                ' SUBSECCI√ìN 6.3: DETECCI√ìN Y REPORTE DE OUTLIERS
                 '------------------------------------------------------------------------
                 If stats(col).NumOutliers > 0 Then
-                    ' Encabezado de secciÛn outliers
+                    ' Encabezado de secci√≥n outliers
                     fila = fila + 1
                     .Cells(fila, colResultados).Value = "OUTLIERS DETECTADOS:"
                     .Range(.Cells(fila, colResultados), .Cells(fila, colResultados + 3)).Merge
@@ -715,7 +654,7 @@ Public Sub MostrarAnalisisVerticalEnHoja()
                     Call FormatearDato(.Cells(fila, colResultados + 1))
                     Call AjustarAlturaPorContenido(.Cells(fila, colResultados + 1))
 
-                    ' Valores especÌficos de outliers
+                    ' Valores espec√≠ficos de outliers
                     fila = fila + 1
                     .Cells(fila, colResultados).Value = "Valores:"
                     .Cells(fila, colResultados + 1).Value = ArrayToString(stats(col).Outliers)
@@ -723,13 +662,13 @@ Public Sub MostrarAnalisisVerticalEnHoja()
                     Call FormatearEncabezado(.Cells(fila, colResultados))
                     Call FormatearDato(.Cells(fila, colResultados + 1))
                     .Cells(fila, colResultados + 1).WrapText = True
-                    .Cells(fila, colResultados + 1).Font.Size = 8 ' Fuente m·s pequeÒa para valores
+                    .Cells(fila, colResultados + 1).Font.Size = 8 ' Fuente m√°s peque√±a para valores
                     Call AjustarAlturaPorTextoCombinado(.Cells(fila, colResultados + 1))
 
 
-                    ' LÌmites IQR utilizados
+                    ' L√≠mites IQR utilizados
                     fila = fila + 1
-                    .Cells(fila, colResultados).Value = "LÌmites IQR:"
+                    .Cells(fila, colResultados).Value = "L√≠mites IQR:"
                     .Cells(fila, colResultados + 1).Value = "[" & _
                         Format(stats(col).LimiteInferiorOutlier, "0.0000") & " - " & _
                         Format(stats(col).LimiteSuperiorOutlier, "0.0000") & "]"
@@ -738,10 +677,10 @@ Public Sub MostrarAnalisisVerticalEnHoja()
                     Call FormatearDato(.Cells(fila, colResultados + 1))
 
                     '------------------------------------------------------------------------
-                    ' SUBSECCI”N 6.4: ESTADÕSTICAS ROBUSTAS (EXCLUYENDO OUTLIERS)
+                    ' SUBSECCI√ìN 6.4: ESTAD√çSTICAS ROBUSTAS (EXCLUYENDO OUTLIERS)
                     '------------------------------------------------------------------------
                     fila = fila + 1
-                    .Cells(fila, colResultados).Value = "--- ESTADÕSTICAS ROBUSTAS ---"
+                    .Cells(fila, colResultados).Value = "--- ESTAD√çSTICAS ROBUSTAS ---"
                     .Range(.Cells(fila, colResultados), .Cells(fila, colResultados + 3)).Merge
                     Call FormatearEncabezado(.Cells(fila, colResultados))
                     Call FormatearEncabezado(.Cells(fila, colResultados + 1))
@@ -755,7 +694,7 @@ Public Sub MostrarAnalisisVerticalEnHoja()
                     Call FormatearDato(.Cells(fila, colResultados + 1))
                     .Cells(fila, colResultados + 1).Interior.color = RGB(173, 216, 230) ' Azul claro
 
-                    ' DesviaciÛn Est·ndar Robusta
+                    ' Desviaci√≥n Est√°ndar Robusta
                     fila = fila + 1
                     .Cells(fila, colResultados).Value = "DE robusta:"
                     .Range(.Cells(fila, colResultados + 1), .Cells(fila, colResultados + 3)).Merge
@@ -783,48 +722,48 @@ Public Sub MostrarAnalisisVerticalEnHoja()
                 End If
 
             '------------------------------------------------------------------------
-            ' SUBSECCI”N 6.8: FORMATEO FINAL DEL BLOQUE DE COLUMNA
+            ' SUBSECCI√ìN 6.8: FORMATEO FINAL DEL BLOQUE DE COLUMNA
             '------------------------------------------------------------------------
             ' Aplicar bordes al bloque completo de resultados
             .Range(.Cells(1, colResultados), .Cells(fila, colResultados + 3)).Borders.LineStyle = xlContinuous
 
-            ' Formato numÈrico para celdas de valores
+            ' Formato num√©rico para celdas de valores
             If stats(col).count > 0 Then
                 '.Range(.Cells(8, colResultados + 1), .Cells(fila, colResultados + 1)).NumberFormat = "0.0000"
             End If
 
-            ' Ajuste de anchos de columna para mejor visualizaciÛn
+            ' Ajuste de anchos de columna para mejor visualizaci√≥n
             .Columns(colResultados).ColumnWidth = 20
             .Columns(colResultados + 1).ColumnWidth = 12
             .Columns(colResultados + 2).ColumnWidth = 8
 
             '------------------------------------------------------------------------
-            ' SUBSECCI”N 6.9: LLAMADA A M”DULO DE GR¡FICOS
+            ' SUBSECCI√ìN 6.9: LLAMADA A M√ìDULO DE GR√ÅFICOS
             '------------------------------------------------------------------------
-            If stats(col).count > 1 Then ' Requisito mÌnimo: 2 puntos para gr·ficos
+            If stats(col).count > 1 Then ' Requisito m√≠nimo: 2 puntos para gr√°ficos
                 Dim graficoTop As Long
-                graficoTop = fila + 2 ' Espacio despuÈs de la tabla
+                graficoTop = fila + 2 ' Espacio despu√©s de la tabla
 
-                ' Llamada al mÛdulo externo de gr·ficos
+                ' Llamada al m√≥dulo externo de gr√°ficos
                 Call CrearGraficosParaColumna(ws, stats(col), graficoTop, colResultados)
             End If
 
-            ' Avanzar a la siguiente posiciÛn de columna
+            ' Avanzar a la siguiente posici√≥n de columna
             colResultados = colResultados + 8 ' Espacio entre columnas de resultados
         Next col
         '----------------------------------------------------------------------------
-        ' SECCI”N 7: RESUMEN GENERAL DEL AN¡LISIS
+        ' SECCI√ìN 7: RESUMEN GENERAL DEL AN√ÅLISIS
         '--------------------------------------------------------
 
         '----------------------------------------------------------------------------
-        ' SECCI”N 8: AJUSTES FINALES DE FORMATEO
+        ' SECCI√ìN 8: AJUSTES FINALES DE FORMATEO
         '----------------------------------------------------------------------------
         .Columns("A:ZZ").AutoFit ' Autoajustar todas las columnas utilizadas
         '.Rows("1:100").AutoFit
     End With
 
     '----------------------------------------------------------------------------
-    ' SECCI”N 9: ACTIVACI”N Y PREPARACI”N FINAL
+    ' SECCI√ìN 9: ACTIVACI√ìN Y PREPARACI√ìN FINAL
     '----------------------------------------------------------------------------
     ws.Activate           ' Activar la hoja de resultados
     ws.Range("A1").Select ' Posicionar cursor en celda A1
@@ -833,19 +772,19 @@ Public Sub MostrarAnalisisVerticalEnHoja()
     Call AjustarColumnasHojaActiva
 
     '----------------------------------------------------------------------------
-    ' SECCI”N 10: AN¡LISIS DE CORRELACI”N (CONDICIONAL)
+    ' SECCI√ìN 10: AN√ÅLISIS DE CORRELACI√ìN (CONDICIONAL)
     '----------------------------------------------------------------------------
     If sigmaproxvl.chkCorrelacion.Value Then
         Call EjecutarAnalisisCorrelacion(stats, wb, True)
     End If
 
-    ' DespuÈs del an·lisis principal
+    ' Despu√©s del an√°lisis principal
     If sigmaproxvl.chkCapacidadProceso.Value Then
         Call RunCapabilityAnalysis
     End If
 
     ' NOTA: Mensaje desactivado para procesos automatizados
-    ' debug.print "An·lisis completado correctamente. Outliers detectados: " & totalOutliers, vbInformation
+    ' debug.print "An√°lisis completado correctamente. Outliers detectados: " & totalOutliers, vbInformation
 Cleanup:
     ' REACTIVAR siempre (incluso si hay error)
     With Application
@@ -856,8 +795,8 @@ Cleanup:
     End With
 End Sub
 
-' VERSI”N 2: DESVIACI”N PORCENTUAL REAL
-' C·lculo matem·ticamente correcto y simÈtrico
+' VERSI√ìN 2: DESVIACI√ìN PORCENTUAL REAL
+' C√°lculo matem√°ticamente correcto y sim√©trico
 ' ============================================
 
 Public Sub AplicarColorDesviacion(celda As Range, ByVal valorObjetivo As Double)
@@ -869,14 +808,14 @@ Public Sub AplicarColorDesviacion(celda As Range, ByVal valorObjetivo As Double)
 
     ' DESACTIVAR durante procesamiento
     With Application
-        .ScreenUpdating = False        ' No actualizar pantalla (CRÕTICO)
-        .Calculation = xlCalculationManual  ' Desactivar c·lculos autom·ticos
+        .ScreenUpdating = False        ' No actualizar pantalla (CR√çTICO)
+        .Calculation = xlCalculationManual  ' Desactivar c√°lculos autom√°ticos
         .EnableEvents = False          ' Desactivar eventos
         .DisplayStatusBar = False      ' Ocultar barra de estado
     End With
 
     On Error GoTo Cleanup
-    ' VerificaciÛn
+    ' Verificaci√≥n
     If Not IsNumeric(celda.Value) Then Exit Sub
 
     If valorObjetivo = 0 Then
@@ -887,23 +826,23 @@ Public Sub AplicarColorDesviacion(celda As Range, ByVal valorObjetivo As Double)
 
     celdaValor = CDbl(celda.Value)
 
-    ' C¡LCULO CORRECTO DE DESVIACI”N PORCENTUAL
-    ' FÛrmula: |Valor - Objetivo| / Objetivo * 100
+    ' C√ÅLCULO CORRECTO DE DESVIACI√ìN PORCENTUAL
+    ' F√≥rmula: |Valor - Objetivo| / Objetivo * 100
     desviacionPorcentual = Abs((celdaValor - valorObjetivo) / valorObjetivo) * 100
 
-    ' ASIGNACI”N DE COLOR (SIM…TRICO para arriba y abajo)
+    ' ASIGNACI√ìN DE COLOR (SIM√âTRICO para arriba y abajo)
     Select Case desviacionPorcentual
-        Case 0 To 5             ' =5% desviaciÛn
+        Case 0 To 5             ' =5% desviaci√≥n
             celda.Interior.color = RGB(34, 197, 94)    ' Verde (Excelente)
             celda.Font.color = RGB(0, 0, 0)
-        Case 5 To 10            ' 5-10% desviaciÛn
+        Case 5 To 10            ' 5-10% desviaci√≥n
             celda.Interior.color = RGB(251, 191, 36)   ' Amarillo (Aceptable)
             celda.Font.color = RGB(0, 0, 0)
-        Case 10 To 15           ' 10-15% desviaciÛn
-            celda.Interior.color = RGB(249, 115, 22)   ' Naranja (LÌmite)
+        Case 10 To 15           ' 10-15% desviaci√≥n
+            celda.Interior.color = RGB(249, 115, 22)   ' Naranja (L√≠mite)
             celda.Font.color = RGB(255, 255, 255)
-        Case Is > 15            ' >15% desviaciÛn
-            celda.Interior.color = RGB(220, 38, 38)    ' Rojo (CrÌtico)
+        Case Is > 15            ' >15% desviaci√≥n
+            celda.Interior.color = RGB(220, 38, 38)    ' Rojo (Cr√≠tico)
             celda.Font.color = RGB(255, 255, 255)
     End Select
 Cleanup:
@@ -917,73 +856,73 @@ Cleanup:
 End Sub
 
 ''================================================================================
-'' NOTAS DE USO Y PERSONALIZACI”N
+'' NOTAS DE USO Y PERSONALIZACI√ìN
 ''================================================================================
 ''
-'' C”MO PERSONALIZAR:
+'' C√ìMO PERSONALIZAR:
 '' ------------------
-'' 1. Colores corporativos: Modificar las constantes de COLOR al inicio del mÛdulo
-'' 2. PosiciÛn inicial: Cambiar COL_INICIO_RESULTADOS (actualmente columna H = 8)
-'' 3. Ancho de cada secciÛn: Ajustar COL_ANCHO_SECCION (por defecto = 5 columnas)
-'' 4. ** SEPARACI”N ENTRE SECCIONES **: Ajustar COL_SEPARACION_SECCIONES (por defecto = 2 columnas)
-''    - Valor 1 = 1 columna vacÌa entre secciones (m·s compacto)
-''    - Valor 2 = 2 columnas vacÌas entre secciones (m·s espaciado) ? RECOMENDADO
-''    - Valor 3 = 3 columnas vacÌas entre secciones (muy espaciado)
+'' 1. Colores corporativos: Modificar las constantes de COLOR al inicio del m√≥dulo
+'' 2. Posici√≥n inicial: Cambiar COL_INICIO_RESULTADOS (actualmente columna H = 8)
+'' 3. Ancho de cada secci√≥n: Ajustar COL_ANCHO_SECCION (por defecto = 5 columnas)
+'' 4. ** SEPARACI√ìN ENTRE SECCIONES **: Ajustar COL_SEPARACION_SECCIONES (por defecto = 2 columnas)
+''    - Valor 1 = 1 columna vac√≠a entre secciones (m√°s compacto)
+''    - Valor 2 = 2 columnas vac√≠as entre secciones (m√°s espaciado) ? RECOMENDADO
+''    - Valor 3 = 3 columnas vac√≠as entre secciones (muy espaciado)
 '' 5. Espaciado vertical: Ajustar ALTO_SECCION_DATOS, ESPACIO_GRAFICOS, etc.
 '' 6. Panel lateral: Modificar CrearPanelLateralInformativo()
 ''
 '' EJEMPLO DE CONFIGURACIONES:
 '' ---------------------------
 ''
-'' ** CONFIGURACI”N COMPACTA **
+'' ** CONFIGURACI√ìN COMPACTA **
 '' COL_ANCHO_SECCION = 4
 '' COL_SEPARACION_SECCIONES = 1
-'' Resultado: Secciones m·s juntas, caben m·s columnas en pantalla
+'' Resultado: Secciones m√°s juntas, caben m√°s columnas en pantalla
 ''
-'' ** CONFIGURACI”N ESPACIADA (RECOMENDADA) **
+'' ** CONFIGURACI√ìN ESPACIADA (RECOMENDADA) **
 '' COL_ANCHO_SECCION = 5
 '' COL_SEPARACION_SECCIONES = 2
-'' Resultado: Buena legibilidad, separaciÛn visual clara
+'' Resultado: Buena legibilidad, separaci√≥n visual clara
 ''
-'' ** CONFIGURACI”N MUY ESPACIADA **
+'' ** CONFIGURACI√ìN MUY ESPACIADA **
 '' COL_ANCHO_SECCION = 6
 '' COL_SEPARACION_SECCIONES = 3
-'' Resultado: M·xima separaciÛn, ideal para presentaciones
+'' Resultado: M√°xima separaci√≥n, ideal para presentaciones
 ''
-'' DOS DISE—OS DISPONIBLES:
+'' DOS DISE√ëOS DISPONIBLES:
 '' ------------------------
 '' 1. MostrarAnalisisVerticalEnHoja() - Layout con panel lateral (RECOMENDADO)
 '' 2. GenerarInformeEstiloTabla() - Layout de tabla comparativa
 ''
-'' CARACTERÕSTICAS PRINCIPALES:
+'' CARACTER√çSTICAS PRINCIPALES:
 '' ---------------------------
 '' ? Columnas A-G protegidas (no se sobrescriben)
 '' ? Resultados desde columna H en adelante
-'' ? ** SEPARACI”N AJUSTABLE ** entre cada secciÛn de resultados
-'' ? LÌneas separadoras visuales opcionales (punteadas y sutiles)
-'' ? Gr·ficos posicionados debajo de cada columna (sin superposiciÛn)
+'' ? ** SEPARACI√ìN AJUSTABLE ** entre cada secci√≥n de resultados
+'' ? L√≠neas separadoras visuales opcionales (punteadas y sutiles)
+'' ? Gr√°ficos posicionados debajo de cada columna (sin superposici√≥n)
 '' ? Panel lateral informativo con KPIs
-'' ? DiseÒo profesional con colores corporativos suaves
-'' ? CongelaciÛn de paneles en columna H
-'' ? Formato responsive que se adapta al n˙mero de columnas
+'' ? Dise√±o profesional con colores corporativos suaves
+'' ? Congelaci√≥n de paneles en columna H
+'' ? Formato responsive que se adapta al n√∫mero de columnas
 ''
-'' C¡LCULO DE POSICIONES:
+'' C√ÅLCULO DE POSICIONES:
 '' ---------------------
-'' PosiciÛn de columna N = COL_INICIO_RESULTADOS + ((N-1) ◊ (COL_ANCHO_SECCION + COL_SEPARACION_SECCIONES))
+'' Posici√≥n de columna N = COL_INICIO_RESULTADOS + ((N-1) √ó (COL_ANCHO_SECCION + COL_SEPARACION_SECCIONES))
 ''
-'' Ejemplo con valores por defecto (Inicio=8, Ancho=5, SeparaciÛn=2):
-'' - Columna 1: 8 + (0 ◊ 7) = Columna H (8)
-'' - Columna 2: 8 + (1 ◊ 7) = Columna O (15)
-'' - Columna 3: 8 + (2 ◊ 7) = Columna V (22)
+'' Ejemplo con valores por defecto (Inicio=8, Ancho=5, Separaci√≥n=2):
+'' - Columna 1: 8 + (0 √ó 7) = Columna H (8)
+'' - Columna 2: 8 + (1 √ó 7) = Columna O (15)
+'' - Columna 3: 8 + (2 √ó 7) = Columna V (22)
 '' - etc.
 ''
-'' INTEGRACI”N:
+'' INTEGRACI√ìN:
 '' -----------
-'' Este cÛdigo se integra con tu mÛdulo existente. Aseg˙rate de tener:
+'' Este c√≥digo se integra con tu m√≥dulo existente. Aseg√∫rate de tener:
 '' - Type EstadisticasColumna definido
-'' - FunciÛn AnalizarColumna() implementada
-'' - FunciÛn ObtenerProximoNumeroHoja() implementada
-'' - FunciÛn CrearGraficosParaColumna() implementada
+'' - Funci√≥n AnalizarColumna() implementada
+'' - Funci√≥n ObtenerProximoNumeroHoja() implementada
+'' - Funci√≥n CrearGraficosParaColumna() implementada
 '' - UserForm sigmaproxvl con los controles correspondientes
 ''
 ''===============================================================================
@@ -993,8 +932,8 @@ End Sub
 '-------------------------------------------------------------------------------
 
 '-------------------------------------------------------------------------------
-' FUNCI”N: FormatearSeccionTitulo
-' PROP”SITO: Formato para tÌtulos de secciÛn del reporte
+' FUNCI√ìN: FormatearSeccionTitulo
+' PROP√ìSITO: Formato para t√≠tulos de secci√≥n del reporte
 '-------------------------------------------------------------------------------
 Sub FormatearSeccionTitulo(rng As Range, titulo As String)
     With rng
@@ -1015,8 +954,8 @@ Sub FormatearSeccionTitulo(rng As Range, titulo As String)
 End Sub
 
 '-------------------------------------------------------------------------------
-' FUNCI”N: FormatearEtiqueta
-' PROP”SITO: Formato para etiquetas de campos
+' FUNCI√ìN: FormatearEtiqueta
+' PROP√ìSITO: Formato para etiquetas de campos
 '-------------------------------------------------------------------------------
 Sub FormatearEtiqueta(rng As Range)
     With rng
@@ -1038,8 +977,8 @@ Sub FormatearEtiqueta(rng As Range)
 End Sub
 
 '-------------------------------------------------------------------------------
-' FUNCI”N: FormatearDato
-' PROP”SITO: Formato para celdas de datos
+' FUNCI√ìN: FormatearDato
+' PROP√ìSITO: Formato para celdas de datos
 '-------------------------------------------------------------------------------
 Sub FormatearDato(rng As Range)
     With rng
