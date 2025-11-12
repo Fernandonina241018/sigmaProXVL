@@ -1,11 +1,11 @@
 '---------------------------------------------------------------------------------------
-' Constante de contraseña
+' Constante de contraseÃ±a
 '---------------------------------------------------------------------------------------
 Private Const Contrasena As String = "Dh@ra/24-1018/fanr"
 
 '---------------------------------------------------------------------------------------
 ' Procedure : MostrarError
-' Purpose   : Muestra un mensaje de error estándar
+' Purpose   : Muestra un mensaje de error estÃ¡ndar
 '---------------------------------------------------------------------------------------
 Private Sub MostrarError(ByVal mensaje As String)
     MsgBox "? " & mensaje, vbCritical, "Error"
@@ -14,6 +14,7 @@ End Sub
 '---------------------------------------------------------------------------------------
 ' Procedure : DesprotegerLibroYHoja
 ' Purpose   : Desprotege la estructura del libro y la hoja activa.
+' Esta linea es una prueba para verificar el Update desde Github
 '---------------------------------------------------------------------------------------
 Public Sub DesprotegerLibroYHoja()
     On Error GoTo ErrorHandler
@@ -24,7 +25,7 @@ Public Sub DesprotegerLibroYHoja()
     If Not ActiveWorkbook.ProtectStructure And Not ActiveSheet.ProtectContents Then
         Debug.Print "? La hoja '" & ActiveSheet.Name & "' y la estructura del libro han sido desbloqueadas."
     Else
-        MsgBox "?? No se pudo desbloquear la hoja o la estructura del libro. Verifique la contraseña.", vbExclamation
+        MsgBox "?? No se pudo desbloquear la hoja o la estructura del libro. Verifique la contraseÃ±a.", vbExclamation
     End If
     Exit Sub
 
@@ -54,17 +55,17 @@ ErrorHandler:
 End Sub
 
 Private Sub Worksheet_SelectionChange(ByVal Target As Range)
-    ' Asegúrate de que el UserForm esté cargado y visible
+    ' AsegÃºrate de que el UserForm estÃ© cargado y visible
     If UserData.Visible Then
         ' Desactiva los eventos para evitar un bucle infinito
         Application.EnableEvents = False
         
-        ' Verifica si la selección no es de una sola celda
+        ' Verifica si la selecciÃ³n no es de una sola celda
         If Target.Cells.count > 1 Then
             ' Rellena el ComboBox del rango de inicio con la primera celda
             UserData.ComboBox1.Value = Target.Cells(1, 1).Address(False, False)
             
-            ' Rellena el ComboBox del rango final con la última celda
+            ' Rellena el ComboBox del rango final con la Ãºltima celda
             UserData.ComboBox2.Value = Target.Cells(Target.Cells.count).Address(False, False)
         End If
         
