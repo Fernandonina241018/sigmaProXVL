@@ -1,7 +1,6 @@
 Public Sub StartInteraccion()
-    ' Mostrar formulario de forma MODAL (bloquea ejecuciÛn hasta cerrar)
+    ' Mostrar formulario de forma MODAL (bloquea ejecuci√≥n hasta cerrar)
     sigmaproxvl.Show
-    
 End Sub
 
 Public Sub IniciarRegresionConRefEdit()
@@ -9,13 +8,13 @@ Public Sub IniciarRegresionConRefEdit()
     Dim rngY As Range  ' Rango para la variable Dependiente (Y)
     
     On Error GoTo CancelHandler
-    ' 1. Solicitar el Rango X (SelecciÛn Gr·fica)
+    ' 1. Solicitar el Rango X (Selecci√≥n Gr√°fica)
     'Set rngX = Application.Range(sigmaproxvl.RefEditVariableX.Text)
     
         ' 1. Seleccionar el Rango X
     Set rngX = Application.Range(sigmaproxvl.txtVariableX.Value)
         
-    ' 2. ValidaciÛn: Asegurar que la selecciÛn no sea bidimensional (X debe ser una columna)
+    ' 2. Validaci√≥n: Asegurar que la selecci√≥n no sea bidimensional (X debe ser una columna)
     If rngX.Columns.count > 1 Then
         MsgBox "Error: Por favor, selecciona solo UNA columna para la variable X (independiente).", vbCritical
         Exit Sub
@@ -24,17 +23,17 @@ Public Sub IniciarRegresionConRefEdit()
     ' 3. Derivar el Rango Y (Columna adyacente)
     Set rngY = rngX.Offset(0, 1)
     
-    ' 4. Ejecutar la RegresiÛn Lineal
-    ' La llamada a la funciÛn ahora usa los rangos definidos din·micamente.
+    ' 4. Ejecutar la Regresi√≥n Lineal
+    ' La llamada a la funci√≥n ahora usa los rangos definidos din√°micamente.
     Call RegresionLinealSimpleMejorada(rngX, rngY)
     
-    MsgBox "An·lisis de regresiÛn simple iniciado exitosamente con rangos seleccionados.", vbInformation
+    MsgBox "An√°lisis de regresi√≥n simple iniciado exitosamente con rangos seleccionados.", vbInformation
     
     Exit Sub
     
 CancelHandler:
     If Err.Number = 424 Or Err.Number = 0 Then
-        ' El usuario pulsÛ 'Cancelar'
+        ' El usuario puls√≥ 'Cancelar'
     Else
         MsgBox "Se produjo un error: " & Err.Description, vbCritical
     End If
