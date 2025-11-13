@@ -149,7 +149,6 @@ Sub FormatearBloqueDatos(rng As Range)
     Next celda
 End Sub
 
-
 Public Sub FormatearCeldaDatos(rng As Range)
     With rng
         ' Fuente profesional
@@ -180,7 +179,6 @@ Public Sub FormatearCeldaDatos(rng As Range)
         Else
             .NumberFormat = "@" ' texto
         End If
-
 
         ' Combinar si es un bloque
         If .Cells.count > 1 Then .Merge
